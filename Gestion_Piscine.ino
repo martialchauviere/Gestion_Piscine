@@ -38,7 +38,7 @@
 #include <stdio.h>
 RTC_DS3231 rtc;
 
-char daysOfTheWeek[7][12] = {"Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"};
+char daysOfTheWeek[7][12] = {"Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
 char monthOfTheYear[12][4] = {"Janv", "Fev", "Mar", "Avr", "Mai", "Juin", "Juil", "Aout", "Sept", "Oct", "Nov", "Dec"};
 // Déclaration de la variable reçue par le port serie
 
@@ -50,9 +50,9 @@ char STRenvoye [100];
 int Jour =0;
 int Mois =0;
 int Annee = 0;
-String Heure =" ";
-String Minute =" ";
-
+int Heure =0;
+int Minute =0;
+int VarInt=0;
 
 
 void setup() {
@@ -104,8 +104,8 @@ if (current_time-previous_time>1000)
   DateTime now = rtc.now(); 
 
 // Affichage du numéro dujour de la semaine
-  NJour = now.day();
-  sprintf(STRenvoye,"txtNJour.txt=\"%d\"",NJour);
+  VarInt = now.day();
+  sprintf(STRenvoye,"txtNJour.txt=\"%d\"",VarInt);
   
   Serial.print(STRenvoye);
   Serial.write(0xFF);
@@ -122,7 +122,7 @@ if (current_time-previous_time>1000)
 
 //Affichage du Mois
 
-Mois = now.month();
+VarInt = now.month();
 switch (Mois) {
   case 1:
     Serial.print("txtMois.txt=\"Janv\"");
@@ -167,28 +167,48 @@ switch (Mois) {
   Serial.write(0xFF);
 
 
+// Affichage l'année
+  VarInt = now.year();
+  sprintf(STRenvoye,"txtAn.txt=\"%d\"",VarInt);
+  
+  Serial.print(STRenvoye);
+  Serial.write(0xFF);
+  Serial.write(0xFF);
+  Serial.write(0xFF);
 
 
 // Affichage de l'heure
-  NJour = now.hour();
-  sprintf(STRenvoye,"txtHeure.txt=\"%d\"",NJour);
+  VarInt = now.hour();
 
-     
+if (VarInt<10) {
+
+  sprintf(STRenvoye,"txtHeure.txt=\"0%d\"",VarInt); 
+ }
+ else {
+ sprintf(STRenvoye,"txtHeure.txt=\"%d\"",VarInt);
+ }    
   Serial.print(STRenvoye);
   Serial.write(0xFF);
   Serial.write(0xFF);
   Serial.write(0xFF);
 
  // Affichage des minutes
-  NJour = now.minute();
-  sprintf(STRenvoye,"txtMinute.txt=\"%d\"",NJour);
+ VarInt = now.minute();
 
-     
+if (VarInt<10) {
+
+sprintf(STRenvoye,"txtMinute.txt=\"0%d\"", VarInt); 
+ }
+ else {
+ sprintf(STRenvoye,"txtMinute.txt=\"%d\"", VarInt);
+ }    
+
+
   Serial.print(STRenvoye);
   Serial.write(0xFF);
   Serial.write(0xFF);
   Serial.write(0xFF); 
-}
+
 
 
 
@@ -217,5 +237,6 @@ Serial.write(0xFF);
 delay(100);
 }
 
+}
 
 }
