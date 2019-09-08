@@ -1,34 +1,3 @@
-#include <doxygen.h>
-#include <NexButton.h>
-#include <NexCheckbox.h>
-#include <NexConfig.h>
-#include <NexCrop.h>
-#include <NexDualStateButton.h>
-#include <NexGauge.h>
-#include <NexGpio.h>
-#include <NexHardware.h>
-#include <NexHotspot.h>
-#include <NexNumber.h>
-#include <NexObject.h>
-#include <NexPage.h>
-#include <NexPicture.h>
-#include <NexProgressBar.h>
-#include <NexRadio.h>
-#include <NexRtc.h>
-#include <NexScrolltext.h>
-#include <NexSlider.h>
-#include <NexText.h>
-#include <NexTimer.h>
-#include <Nextion.h>
-#include <NexTouch.h>
-#include <NexUpload.h>
-#include <NexVariable.h>
-#include <NexWaveform.h>
-
-
-#include <Nextion.h>
-
-
 
 
 // Date and time functions using a DS3231 RTC connected via I2C and Wire lib
@@ -95,7 +64,7 @@ STRrecu= Serial.readString();
 
 unsigned long current_time=millis();
 
-if (current_time-previous_time>1000)
+if (current_time-previous_time>60000)
 {
   
   previous_time=current_time;
@@ -123,7 +92,7 @@ if (current_time-previous_time>1000)
 //Affichage du Mois
 
 VarInt = now.month();
-switch (Mois) {
+switch (VarInt) {
   case 1:
     Serial.print("txtMois.txt=\"Janv\"");
     break;
@@ -191,6 +160,7 @@ if (VarInt<10) {
   Serial.write(0xFF);
   Serial.write(0xFF);
   Serial.write(0xFF);
+ 
 
  // Affichage des minutes
  VarInt = now.minute();
@@ -209,22 +179,20 @@ sprintf(STRenvoye,"txtMinute.txt=\"0%d\"", VarInt);
   Serial.write(0xFF);
   Serial.write(0xFF); 
 
+}
+//Fin de la  Mise à jour Date / Heure
 
 
-
-
-
-
-if (((STRrecu)==("Ledon")))
+if (((STRrecu)==("LedOn")))
 {
   digitalWrite(8,HIGH);
 
-Serial.print("t0.txt=\"ON\"");
+  Serial.print("t0.txt=\"ON\"");
+  Serial.write(0xFF);
+  Serial.write(0xFF);
+  Serial.write(0xFF); 
+  delay (100);
 
-Serial.write(0xFF);
-Serial.write(0xFF);
-Serial.write(0xFF);
-delay(100);
 }
 if (((STRrecu)==("Ledoff")))
 {
@@ -234,9 +202,7 @@ Serial.print("t0.txt=\"OFF\"");
 Serial.write(0xFF);
 Serial.write(0xFF);
 Serial.write(0xFF);
-delay(100);
-}
-
+ delay (100);
 }
 
 }
